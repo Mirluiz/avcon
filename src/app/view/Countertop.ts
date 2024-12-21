@@ -28,6 +28,7 @@ class Countertop extends Object implements IObject, Observer {
       super.setModel(model);
 
       const { leftLeg, panel, rightLeg } = model.getChildren();
+
       const {
         panel: panelView,
         leftLeg: lLView,

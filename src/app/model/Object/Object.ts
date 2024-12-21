@@ -8,6 +8,7 @@ enum Type {
 }
 
 interface ObjectProps {
+  metadata?: Partial<{ position: "left" | "right" }>;
   type: Type;
   children: ObjectProps[];
   name: string;
@@ -30,9 +31,9 @@ interface Object {
   position: { x: number; y: number; z: number };
   origin: { x: number; y: number; z: number };
 
-  metadata?: {
+  metadata?: Partial<{
     position: "left" | "right";
-  };
+  }>;
 
   rebuild: () => void;
   resize: (props?: Partial<Object["dimension"]>) => void;

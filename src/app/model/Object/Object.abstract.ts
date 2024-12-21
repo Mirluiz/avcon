@@ -37,6 +37,7 @@ abstract class Object implements IObject {
       if (props.rotation) this.rotation = { ...props.rotation };
       if (props.name) this.name = props.name;
       if (props.type) this.type = props.type;
+      if (props.metadata) this.metadata = props.metadata;
     }
   }
 

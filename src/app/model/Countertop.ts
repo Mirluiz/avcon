@@ -11,9 +11,10 @@ class Countertop extends Object {
 
     props.children.forEach((child) => {
       // <<if else>> can be replace to class loader.
-      if (child instanceof Leg) {
+      console.log("leg", child);
+      if (child.type === Type.LEG) {
         this.children.push(new Leg(child));
-      } else if (child instanceof Panel) {
+      } else if (child.type === Type.PANEL) {
         this.children.push(new Panel(child));
       }
     });
@@ -23,13 +24,15 @@ class Countertop extends Object {
     const { leftLeg, rightLeg, panel } = this.getChildren();
 
     if (rightLeg) {
+      rightLeg.rotation = { w: 0.7071068, x: 0, y: 0.7071068, z: 0 };
       rightLeg.position.x =
-        -this.dimension.width / 2 + rightLeg.dimension.width / 2;
+        -this.dimension.width / 2 + rightLeg.dimension.depth / 2;
     }
 
     if (leftLeg) {
+      leftLeg.rotation = { w: 0.7071068, x: 0, y: -0.7071068, z: 0 };
       leftLeg.position.x =
-        this.dimension.width / 2 - leftLeg.dimension.width / 2;
+        this.dimension.width / 2 - leftLeg.dimension.depth / 2;
     }
 
     if (panel) {
@@ -50,11 +53,10 @@ class Countertop extends Object {
     this.origin.y = -this.dimension.height / 2;
 
     const { width, height, depth } = this.dimension;
-
     const { leftLeg, rightLeg, panel } = this.getChildren();
 
-    if (leftLeg) leftLeg.resize({ height });
-    if (rightLeg) rightLeg.resize({ height });
+    if (leftLeg) leftLeg.resize({ height, width: depth, depth: 0.01 });
+    if (rightLeg) rightLeg.resize({ height, width: depth, depth: 0.01 });
     if (panel) {
       panel.resize({ width, height: depth, depth: 0.018 });
     }
@@ -70,6 +72,7 @@ class Countertop extends Object {
     const panel = this.children.find(
       (child) => child.type === Type.PANEL
     ) as Panel | null;
+    console.log("rigt", rightLeg, leftLeg);
 
     return { rightLeg, leftLeg, panel };
   }
@@ -93,15 +96,14 @@ class Countertop extends Object {
       rotation: { w: 1, x: 0, y: 0, z: 0 },
     };
 
-    const panel = new Panel(Panel.createNew());
-    const countertop = new Countertop(props);
-    const leftLeg = new Leg(Leg.createNew());
+    const panel = Panel.createNew();
+    const leftLeg = Leg.createNew();
     leftLeg.metadata = { position: "left" };
 
-    const rightLeg = new Leg(Leg.createNew());
+    const rightLeg = Leg.createNew();
     rightLeg.metadata = { position: "right" };
 
-    props.children = [panel, countertop, leftLeg, rightLeg];
+    props.children = [panel, leftLeg, rightLeg];
 
     return new Countertop(props);
   }
