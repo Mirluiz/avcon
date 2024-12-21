@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { InputSlider } from "./components/InputSlider";
 import ToggleButtons from "./components/ToggleButton";
+import { Object } from "../app/view/Object";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -47,8 +48,21 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 
 const shapeStyles = { bgcolor: "black", width: 40, height: 40 };
 const shapeCircleStyles = { borderRadius: "50%" };
-const circle = (color: string) => (
-  <Box sx={{ ...shapeStyles, ...shapeCircleStyles, bgcolor: color }} />
+const circle = (color: string, item: Object | null) => (
+  <Box
+    onClick={() => {
+      if (item) {
+        // item.color = color;
+        item.mesh?.material.color.set(color);
+      }
+    }}
+    sx={{
+      ...shapeStyles,
+      ...shapeCircleStyles,
+      bgcolor: color,
+      cursor: "pointer",
+    }}
+  />
 );
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
@@ -61,7 +75,7 @@ function useForceUpdate() {
   return () => setValue((value) => value + 1);
 }
 
-export const RightPanel = () => {
+export const RightPanel = (props: { item: Object | null }) => {
   return (
     <Grid
       sx={{
@@ -74,11 +88,11 @@ export const RightPanel = () => {
         </AccordionSummary>
         <AccordionDetails>
           <Stack spacing={3} direction="row">
-            {circle("#c7b299")}
-            {circle("#cd7f32")}
-            {circle("#1c1c1c")}
-            {circle("#f0f0f0")}
-            {circle("#773f1a")}
+            {circle("#c7b299", props.item)}
+            {circle("#cd7f32", props.item)}
+            {circle("#1c1c1c", props.item)}
+            {circle("#f0f0f0", props.item)}
+            {circle("#773f1a", props.item)}
           </Stack>
         </AccordionDetails>
       </Accordion>
@@ -90,7 +104,7 @@ export const RightPanel = () => {
           <InputSlider
             name={"Ширина А (мм)"}
             onChange={(val: number) => {
-              console.log("val", val);
+              props.item?.model?.resize({ width: toMM(val) });
             }}
             ext={{
               min: 1200,
@@ -101,7 +115,7 @@ export const RightPanel = () => {
           <InputSlider
             name={"Глубина А (мм)"}
             onChange={(val: number) => {
-              console.log("val", val);
+              props.item?.model?.resize({ depth: toMM(val) });
             }}
             ext={{
               min: 300,
@@ -112,7 +126,7 @@ export const RightPanel = () => {
           <InputSlider
             name={"Высота А (мм)"}
             onChange={(val: number) => {
-              console.log("val", val);
+              props.item?.model?.resize({ height: toMM(val) });
             }}
             ext={{
               min: 500,
@@ -132,4 +146,8 @@ export const RightPanel = () => {
       </Accordion>
     </Grid>
   );
+};
+
+const toMM = (n: number) => {
+  return n / 1000;
 };

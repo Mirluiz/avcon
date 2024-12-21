@@ -1,7 +1,7 @@
 import { Object } from "./Object/Object.abstract";
 import { Object as IObject, ObjectProps } from "./Object/Object";
 
-class Leg extends Object {
+class Panel extends Object {
   rebuild() {}
 
   resize(
@@ -34,14 +34,14 @@ class Leg extends Object {
 
   static createNew() {
     const props: ObjectProps = {
-      name: "Опора",
-      dimension: { width: 1.2, depth: 1.2, height: 1 },
+      name: 'Panel',
+      dimension: { width: 0.3, depth: 0.01, height: 0.3 },
       position: { x: 0, y: 0, z: 0 },
       rotation: { w: 1, x: 0, y: 0, z: 0 },
     };
 
-    return new Leg(props);
+    return new Panel(props);
   }
 }
 
-export { Leg };
+export { Panel };

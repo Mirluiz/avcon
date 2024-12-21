@@ -1,4 +1,4 @@
-import { Object } from "../model/Object/Object";
+import { Object } from "../view/Object";
 import { uuidv4 } from "./uuid";
 
 type SceneEvents = "scene_init";

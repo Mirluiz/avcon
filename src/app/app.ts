@@ -8,13 +8,15 @@ class App {
   events: EventSystem;
 
   constructor() {
-    this.view = new SceneView();
     this.model = new SceneModel();
+    this.view = new SceneView(this.model);
+    this.events = new EventSystem();
   }
 
   init() {
     this.model.init();
     this.view.init();
+    this.events.emit("scene_init", this.view.views);
   }
 }
 

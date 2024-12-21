@@ -1,21 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-// import { RightPanel } from "./RightPanel";
-import {
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Grid,
-  MenuItem,
-  Snackbar,
-  TextField,
-} from "@mui/material";
+import { Grid } from "@mui/material";
 import { App } from "../app/app";
 import { Scene } from "../scene";
 import { RightPanel } from "./RightPanel";
+import { Object } from "../app/view/Object";
 
 function useForceUpdate() {
   const [value, setValue] = useState(0);
@@ -23,12 +11,9 @@ function useForceUpdate() {
 }
 
 export const GuiApp = () => {
-  const [backDrop, setBackDrop] = useState(false);
-
-  const [app, setApp] = useState<App | null>(null);
-  const element = useRef<HTMLDivElement | null>(null);
-
   const forceUpdate = useForceUpdate();
+  const element = useRef<HTMLDivElement | null>(null);
+  const activeItem = useRef<Object | null>(null);
 
   useEffect(() => {
     if (element.current) {
@@ -36,13 +21,23 @@ export const GuiApp = () => {
         const three = new Scene({ canvas: element.current });
 
         const app = new App();
-        app.init();
 
         app.events.subscribe("scene_init", (views) => {
-          console.log(views);
+          views.forEach((view, index) => {
+            if (index === 0) {
+              // first item choosed for showcase;
+              activeItem.current = view;
+            }
+
+            view.render();
+            const { mesh } = view;
+            if (mesh) three.scene.add(mesh);
+          });
         });
 
+        app.init();
         three.animate();
+        forceUpdate();
       } catch (er) {
         console.log("Error", er);
       }
@@ -50,12 +45,7 @@ export const GuiApp = () => {
   }, []);
 
   return (
-    <Grid
-      container
-      onMouseMove={(event) => {
-        console.log("");
-      }}
-    >
+    <Grid container>
       <Grid
         item
         lg={9.5}
@@ -67,7 +57,7 @@ export const GuiApp = () => {
         }}
       />
       <Grid item lg={2.5} style={{ height: "100vh", overflowY: "scroll" }}>
-        <RightPanel />
+        <RightPanel item={activeItem.current} />
       </Grid>
     </Grid>
   );

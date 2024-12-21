@@ -1,5 +1,7 @@
 import { Object } from "./Object/Object.abstract";
 import { Object as IObject, ObjectProps } from "./Object/Object";
+import { Panel } from "./Panel";
+import { Leg } from "./Leg";
 
 class Countertop extends Object {
   rebuild() {}
@@ -34,10 +36,19 @@ class Countertop extends Object {
 
   static createNew() {
     const props: ObjectProps = {
+      name: "Бокс",
       dimension: { width: 1.2, depth: 1.2, height: 1 },
       position: { x: 0, y: 0, z: 0 },
       rotation: { w: 1, x: 0, y: 0, z: 0 },
     };
+
+    const panel = new Panel(Panel.createNew());
+    const countertop = new Countertop(props);
+    const leftLeg = new Leg(Leg.createNew());
+    leftLeg.metadata = { position: "left" };
+
+    const rightLeg = new Leg(Leg.createNew());
+    leftLeg.metadata = { position: "right" };
 
     return new Countertop(props);
   }

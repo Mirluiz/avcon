@@ -1,10 +1,11 @@
 import * as THREE from "three";
 import { Object } from "./Object";
 import { Object as ObjectModel } from "./../model/Object/Object";
+import { Observer } from "../services/Observer";
 
-class Countertop implements Object {
+class Countertop implements Object, Observer {
   model: ObjectModel | null = null;
-  mesh: THREE.Mesh | null = null;
+  mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial> | null = null;
   texture: THREE.Texture | null = null;
 
   dimension: { width: number; height: number; depth: number } = {
@@ -40,6 +41,14 @@ class Countertop implements Object {
   }
 
   dispose() {}
+
+  trigger() {
+    console.log("triggering");
+  }
+
+  setModel(model: ObjectModel) {
+    model.addObserver(this);
+  }
 }
 
 export { Countertop };
