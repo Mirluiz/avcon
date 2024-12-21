@@ -34,7 +34,7 @@ class Countertop extends Object {
 
     if (panel) {
       panel.rotation = { w: 0.7071068, x: 0.7071068, y: 0, z: 0 };
-      panel.position.x = this.dimension.height / 2 + panel.dimension.depth / 2;
+      panel.position.y = this.dimension.height / 2 + panel.dimension.depth / 2;
     }
   }
 

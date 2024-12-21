@@ -20,9 +20,10 @@ class Countertop extends Object implements IObject, Observer {
 
   setModel(model: ObjectModel): void {
     if (model instanceof CountertopModel) {
+      super.setModel(model);
+
       const { leftLeg, panel, rightLeg } = model.getChildren();
       const { panel: panelView } = this.getChildren();
-      console.log("panelview", panelView);
 
       if (panel) panelView?.setModel(panel);
     }

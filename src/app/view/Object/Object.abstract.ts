@@ -48,7 +48,21 @@ abstract class Object implements IObject, Observer {
     );
     this.mesh = new THREE.Mesh(
       geometry,
-      new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.5 })
+      new THREE.MeshStandardMaterial({
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+      })
+    );
+
+    this.mesh.position.set(this.position.x, this.position.y, this.position.z);
+    this.mesh.setRotationFromQuaternion(
+      new THREE.Quaternion(
+        this.rotation.x,
+        this.rotation.y,
+        this.rotation.z,
+        this.rotation.w
+      )
     );
 
     this.children.forEach((element) => {
@@ -81,7 +95,18 @@ abstract class Object implements IObject, Observer {
         this.dimension.depth
       );
 
+      this.mesh.position.set(this.position.x, this.position.y, this.position.z);
+      this.mesh.setRotationFromQuaternion(
+        new THREE.Quaternion(
+          this.rotation.x,
+          this.rotation.y,
+          this.rotation.z,
+          this.rotation.w
+        )
+      );
+
       if (this.model?.useColor && this.model.color) {
+        mesh.material.transparent = false;
         mesh.material.color.set(this.model.color);
       } else {
         console.log("put texture here");

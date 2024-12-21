@@ -9,7 +9,9 @@ class Scene {
   }
 
   init() {
-    const demoCountertop = Countertop.createNew(); 
+    const demoCountertop = Countertop.createNew();
+    demoCountertop.resize();
+    demoCountertop.rebuild();
     this.addObject(demoCountertop);
   }
 }

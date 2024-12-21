@@ -86,6 +86,7 @@ export const RightPanel = (props: { item: Object | null }) => {
         height: toMM(500),
         depth: toMM(300),
       });
+      model.rebuild();
 
       model.setPanelMaterial("#c7b299");
       model.notifyObservers();
@@ -121,6 +122,7 @@ export const RightPanel = (props: { item: Object | null }) => {
             name={"Ширина А (мм)"}
             onChange={(val: number) => {
               props.item?.model?.resize({ width: toMM(val) });
+              props.item?.model?.rebuild();
               props.item?.model?.notifyObservers();
             }}
             ext={{
@@ -133,6 +135,7 @@ export const RightPanel = (props: { item: Object | null }) => {
             name={"Глубина А (мм)"}
             onChange={(val: number) => {
               props.item?.model?.resize({ depth: toMM(val) });
+              props.item?.model?.rebuild();
               props.item?.model?.notifyObservers();
             }}
             ext={{
@@ -145,6 +148,7 @@ export const RightPanel = (props: { item: Object | null }) => {
             name={"Высота А (мм)"}
             onChange={(val: number) => {
               props.item?.model?.resize({ height: toMM(val) });
+              props.item?.model?.rebuild();
               props.item?.model?.notifyObservers();
             }}
             ext={{

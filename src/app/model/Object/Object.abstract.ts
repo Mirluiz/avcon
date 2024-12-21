@@ -32,7 +32,7 @@ abstract class Object implements IObject {
     if (props) {
       if (props.dimension) this.dimension = { ...props.dimension };
       if (props.position) this.position = { ...props.position };
-      if (props.rotation) this.position = { ...props.rotation };
+      if (props.rotation) this.rotation = { ...props.rotation };
       if (props.name) this.name = props.name;
       if (props.type) this.type = props.type;
     }
