@@ -55,7 +55,12 @@ abstract class Object implements IObject, Observer {
       })
     );
 
-    this.mesh.position.set(this.position.x, this.position.y, this.position.z);
+    const finalPos = new THREE.Vector3(
+      this.position.x + (this.model?.origin.x ?? 0),
+      this.position.y + (this.model?.origin.y ?? 0),
+      this.position.z + (this.model?.origin.z ?? 0)
+    );
+    this.mesh.position.set(finalPos.x, finalPos.y, finalPos.z);
     this.mesh.setRotationFromQuaternion(
       new THREE.Quaternion(
         this.rotation.x,
@@ -107,6 +112,7 @@ abstract class Object implements IObject, Observer {
 
       if (this.model?.useColor && this.model.color) {
         mesh.material.transparent = false;
+        mesh.material.opacity = 1;
         mesh.material.color.set(this.model.color);
       } else {
         console.log("put texture here");

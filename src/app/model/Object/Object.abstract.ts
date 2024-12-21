@@ -3,6 +3,8 @@ import { uuidv4 } from "../../services/uuid";
 import { Object as IObject, ObjectProps, Type } from "./Object";
 
 abstract class Object implements IObject {
+  // pivot: {x: number, y: number, z: number}
+  origin: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 }; // origin is only for root object
   isFrame: boolean = true;
   type: Type = Type.OBJECT;
   useColor: boolean = true;

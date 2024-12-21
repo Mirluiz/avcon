@@ -47,6 +47,8 @@ class Countertop extends Object {
       if (dimension.depth) this.dimension.depth = dimension.depth;
     }
 
+    this.origin.y = -this.dimension.height / 2;
+
     const { width, height, depth } = this.dimension;
 
     const { leftLeg, rightLeg, panel } = this.getChildren();

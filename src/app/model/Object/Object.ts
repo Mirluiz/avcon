@@ -28,6 +28,7 @@ interface Object {
   dimension: { width: number; height: number; depth: number };
   rotation: { w: number; x: number; y: number; z: number };
   position: { x: number; y: number; z: number };
+  origin: { x: number; y: number; z: number };
 
   metadata?: {
     position: "left" | "right";
