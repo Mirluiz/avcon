@@ -57,7 +57,7 @@ export const GuiApp = () => {
         }}
       />
       <Grid item lg={2.5} style={{ height: "100vh", overflowY: "scroll" }}>
-        <RightPanel item={activeItem.current} />
+        {activeItem.current && <RightPanel item={activeItem.current} />}
       </Grid>
     </Grid>
   );

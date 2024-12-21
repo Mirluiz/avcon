@@ -3,6 +3,8 @@ import { uuidv4 } from "../../services/uuid";
 import { Object as IObject, ObjectProps } from "./Object";
 
 abstract class Object implements IObject {
+  useColor: boolean = true;
+  color: string | null = null;
   name: string = "";
   uuid: string;
   children: IObject[] = [];

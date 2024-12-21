@@ -8,6 +8,8 @@ interface ObjectProps {
 }
 
 interface Object {
+  useColor: boolean;
+  color: string | null;
   name: string;
   children: Object[];
   observers: Observer[];

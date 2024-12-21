@@ -6,6 +6,7 @@ import { Observer } from "../services/Observer";
 class Countertop implements Object, Observer {
   model: ObjectModel | null = null;
   mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial> | null = null;
+  material: THREE.MeshStandardMaterial | null = null;
   texture: THREE.Texture | null = null;
 
   dimension: { width: number; height: number; depth: number } = {
@@ -36,18 +37,69 @@ class Countertop implements Object, Observer {
   render() {
     this.updateByModel();
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const geometry = new THREE.BoxGeometry(
+      this.dimension.width,
+      this.dimension.height,
+      this.dimension.depth
+    );
     this.mesh = new THREE.Mesh(geometry);
   }
 
-  dispose() {}
+  refresh() {
+    this.updateByModel();
+
+    if (this.mesh) {
+      const { mesh } = this;
+
+      mesh.geometry = new THREE.BoxGeometry(
+        this.dimension.width,
+        this.dimension.height,
+        this.dimension.depth
+      );
+
+      if (this.model?.useColor && this.model.color) {
+        mesh.material.color.set(this.model.color);
+      } else {
+        console.log("put texture here");
+      }
+      // mesh.material = new THREE.MeshStandardMaterial({
+      //   color: this.model?.color,
+      // });
+    }
+  }
+
+  dispose() {
+    const { mesh } = this;
+
+    // this?.children.forEach((child) => {
+    //   child.dispose();
+    // });
+
+    if (mesh) {
+      if (this.isMesh(mesh)) {
+        mesh?.material?.dispose();
+        mesh.geometry.dispose();
+
+        if (mesh.material instanceof THREE.MeshBasicMaterial) {
+          mesh?.material?.map?.dispose();
+        }
+      }
+    }
+  }
 
   trigger() {
-    console.log("triggering");
+    this.refresh();
   }
 
   setModel(model: ObjectModel) {
     model.addObserver(this);
+    this.model = model;
+  }
+
+  private isMesh(
+    obj: THREE.Object3D
+  ): obj is THREE.Mesh<THREE.BoxGeometry, THREE.Material> {
+    return "isMesh" in obj;
   }
 }
 

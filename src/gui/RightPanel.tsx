@@ -51,9 +51,9 @@ const shapeCircleStyles = { borderRadius: "50%" };
 const circle = (color: string, item: Object | null) => (
   <Box
     onClick={() => {
-      if (item) {
-        // item.color = color;
-        item.mesh?.material.color.set(color);
+      if (item && item.model) {
+        item.model.color = color;
+        item.model?.notifyObservers();
       }
     }}
     sx={{
@@ -76,6 +76,22 @@ function useForceUpdate() {
 }
 
 export const RightPanel = (props: { item: Object | null }) => {
+  useEffect(() => {
+    console.log("use effect");
+    if (props.item?.model) {
+      const { model } = props.item;
+
+      model.resize({
+        width: toMM(1200),
+        height: toMM(500),
+        depth: toMM(300),
+      });
+
+      model.color = "#c7b299";
+      model.notifyObservers();
+    }
+  }, []);
+
   return (
     <Grid
       sx={{
@@ -105,6 +121,7 @@ export const RightPanel = (props: { item: Object | null }) => {
             name={"Ширина А (мм)"}
             onChange={(val: number) => {
               props.item?.model?.resize({ width: toMM(val) });
+              props.item?.model?.notifyObservers();
             }}
             ext={{
               min: 1200,
@@ -116,6 +133,7 @@ export const RightPanel = (props: { item: Object | null }) => {
             name={"Глубина А (мм)"}
             onChange={(val: number) => {
               props.item?.model?.resize({ depth: toMM(val) });
+              props.item?.model?.notifyObservers();
             }}
             ext={{
               min: 300,
@@ -127,6 +145,7 @@ export const RightPanel = (props: { item: Object | null }) => {
             name={"Высота А (мм)"}
             onChange={(val: number) => {
               props.item?.model?.resize({ height: toMM(val) });
+              props.item?.model?.notifyObservers();
             }}
             ext={{
               min: 500,

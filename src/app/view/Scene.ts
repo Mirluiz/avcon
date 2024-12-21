@@ -12,6 +12,7 @@ class Scene {
     this.sceneModel.objects.forEach((model) => {
       const view = new Countertop();
       view.setModel(model);
+
       this.views.push(view);
     });
   }
