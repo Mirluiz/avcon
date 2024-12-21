@@ -1,4 +1,3 @@
-
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { Vector3 } from "three";
@@ -34,7 +33,7 @@ class Scene {
 
     this.renderer.setSize(
       this.htmlElement.clientWidth,
-      this.htmlElement.clientHeight,
+      this.htmlElement.clientHeight
     );
     this.htmlElement.appendChild(this.renderer.domElement);
 
@@ -42,16 +41,15 @@ class Scene {
       30,
       this.htmlElement.clientWidth / this.htmlElement.clientHeight,
       0.1,
-      100,
+      100
     );
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.camera.updateMatrix();
     this.controls.update();
 
-    this.camera.position.set(0, 1, 2)
-    this.camera.lookAt(0, 0, 0)
-
+    this.camera.position.set(0, 1, 2);
+    this.camera.lookAt(0, 0, 0);
 
     this.scene = new THREE.Scene();
 
@@ -70,17 +68,13 @@ class Scene {
 
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
-    this.renderer.useLegacyLights = false;
     this.renderer.shadowMap.type = THREE.PCFShadowMap;
 
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
     this.renderer.toneMapping = THREE.NoToneMapping;
     this.renderer.toneMappingExposure = 1;
 
-    this.renderer.outputEncoding = THREE.sRGBEncoding;
-
     this.stats = new Stats();
-
   }
 
   animate() {
@@ -89,9 +83,6 @@ class Scene {
     this.renderer.render(this.scene, this.camera);
     this.stats.update();
   }
-
 }
 
 export { Scene };
-
-

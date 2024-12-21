@@ -1,3 +1,5 @@
-class Scene {}
+class Scene {
+  views: Views[];
+}
 
 export { Scene };

@@ -36,6 +36,12 @@ export const GuiApp = () => {
         const three = new Scene({ canvas: element.current });
 
         const app = new App();
+        app.init();
+
+        app.events.subscribe("scene_init", (views) => {
+          console.log(views);
+        });
+
         three.animate();
       } catch (er) {
         console.log("Error", er);

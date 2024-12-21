@@ -12,7 +12,7 @@ class App {
     this.model = new SceneModel();
   }
 
-  run() {
+  init() {
     this.model.init();
     this.view.init();
   }

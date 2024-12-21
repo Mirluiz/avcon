@@ -1,3 +1,4 @@
+import { Countertop } from "./Countertop";
 import { Object } from "./Object/Object";
 
 class Scene {
@@ -5,6 +6,11 @@ class Scene {
 
   addObject(obj: Object) {
     this.objects.push(obj);
+  }
+
+  init() {
+    const demoCountertop = Countertop.createNew();
+    this.addObject(demoCountertop);
   }
 }
 
