@@ -13,6 +13,7 @@ import { styled } from "@mui/material/styles";
 import { InputSlider } from "./components/InputSlider";
 import ToggleButtons from "./components/ToggleButton";
 import { Object } from "../app/view/Object/Object";
+import { Countertop } from "../app/model/Countertop";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -51,8 +52,8 @@ const shapeCircleStyles = { borderRadius: "50%" };
 const circle = (color: string, item: Object | null) => (
   <Box
     onClick={() => {
-      if (item && item.model) {
-        item.model.color = color;
+      if (item && item.model instanceof Countertop) {
+        item.model.setPanelMaterial(color);
         item.model?.notifyObservers();
       }
     }}
@@ -77,8 +78,7 @@ function useForceUpdate() {
 
 export const RightPanel = (props: { item: Object | null }) => {
   useEffect(() => {
-    console.log("use effect");
-    if (props.item?.model) {
+    if (props.item?.model instanceof Countertop) {
       const { model } = props.item;
 
       model.resize({
@@ -87,7 +87,7 @@ export const RightPanel = (props: { item: Object | null }) => {
         depth: toMM(300),
       });
 
-      model.color = "#c7b299";
+      model.setPanelMaterial("#c7b299");
       model.notifyObservers();
     }
   }, []);

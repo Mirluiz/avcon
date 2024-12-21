@@ -1,9 +1,15 @@
 import * as THREE from "three";
 import { Object as ObjectModel } from "../../model/Object/Object";
 
+export type BasicMesh = THREE.Mesh<
+  THREE.BoxGeometry,
+  THREE.MeshStandardMaterial
+>;
+
 interface Object {
+  metadata: { [key in string]: any };
   children: Object[];
-  mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial> | null;
+  mesh: BasicMesh | null;
   texture: THREE.Texture | null;
   model: ObjectModel | null;
 
@@ -14,6 +20,7 @@ interface Object {
   render: () => void;
   dispose: () => void;
   setModel: (model: ObjectModel) => void;
+  merge: () => BasicMesh | null;
 }
 
 export { Object };

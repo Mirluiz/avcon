@@ -47,15 +47,18 @@ class Countertop extends Object {
       if (dimension.depth) this.dimension.depth = dimension.depth;
     }
 
-    const { height } = this.dimension;
+    const { width, height, depth } = this.dimension;
 
-    const { leftLeg, rightLeg } = this.getChildren();
+    const { leftLeg, rightLeg, panel } = this.getChildren();
 
     if (leftLeg) leftLeg.resize({ height });
     if (rightLeg) rightLeg.resize({ height });
+    if (panel) {
+      panel.resize({ width, height: depth, depth: 0.018 });
+    }
   }
 
-  private getChildren() {
+  getChildren() {
     const rightLeg = this.children.find(
       (child) => child.metadata?.position === "left"
     ) as Leg | null;
@@ -67,6 +70,15 @@ class Countertop extends Object {
     ) as Panel | null;
 
     return { rightLeg, leftLeg, panel };
+  }
+
+  setPanelMaterial(color: string) {
+    const { panel } = this.getChildren();
+    if (panel) panel.color = color;
+  }
+
+  setLeg(variant: "leg1" | "leg2") {
+    console.log("legs changed", variant);
   }
 
   static createNew() {

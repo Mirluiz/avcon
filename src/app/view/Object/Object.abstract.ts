@@ -1,12 +1,13 @@
 import * as THREE from "three";
-import { Object as IObject } from "../Object/Object";
+import { BasicMesh, Object as IObject } from "../Object/Object";
 import { Object as ObjectModel } from "../../model/Object/Object";
 import { Observer } from "../../services/Observer";
 
-abstract class Object implements Object, Observer {
+abstract class Object implements IObject, Observer {
+  metadata: { [x: string]: any } = {};
   children: Object[] = [];
   model: ObjectModel | null = null;
-  mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial> | null = null;
+  mesh: BasicMesh | null = null;
   material: THREE.MeshStandardMaterial | null = null;
   texture: THREE.Texture | null = null;
 
@@ -45,14 +46,19 @@ abstract class Object implements Object, Observer {
       this.dimension.height,
       this.dimension.depth
     );
-    this.mesh = new THREE.Mesh(geometry);
+    this.mesh = new THREE.Mesh(
+      geometry,
+      new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.5 })
+    );
 
     this.children.forEach((element) => {
       element.render();
     });
   }
 
-  merge(): THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial> | null {
+  merge(): BasicMesh | null {
+    this.render();
+
     const { mesh } = this;
 
     this.children.forEach((child) => {
@@ -81,6 +87,8 @@ abstract class Object implements Object, Observer {
         console.log("put texture here");
       }
     }
+
+    this.children.forEach((child) => child.refresh());
   }
 
   dispose() {

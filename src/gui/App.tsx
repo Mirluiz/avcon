@@ -29,9 +29,9 @@ export const GuiApp = () => {
               activeItem.current = view;
             }
 
-            view.render();
-            const { mesh } = view;
-            if (mesh) three.scene.add(mesh);
+            const mergedMesh = view.merge();
+
+            if (mergedMesh) three.scene.add(mergedMesh);
           });
         });
 
