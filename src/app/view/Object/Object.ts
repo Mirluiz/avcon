@@ -1,7 +1,8 @@
 import * as THREE from "three";
-import { Object as ObjectModel } from "./../model/Object/Object";
+import { Object as ObjectModel } from "../../model/Object/Object";
 
 interface Object {
+  children: Object[];
   mesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial> | null;
   texture: THREE.Texture | null;
   model: ObjectModel | null;

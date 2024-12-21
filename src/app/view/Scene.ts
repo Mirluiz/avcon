@@ -1,4 +1,4 @@
-import { Object } from "./Object";
+import { Object } from "./Object/Object";
 import { Object as ObjectModel } from "./../model/Object/Object";
 import { Scene as SceneModel } from "../model/Scene";
 import { Countertop } from "./Countertop";

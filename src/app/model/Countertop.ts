@@ -4,6 +4,8 @@ import { Panel } from "./Panel";
 import { Leg } from "./Leg";
 
 class Countertop extends Object {
+  frame = true;
+
   constructor(props: ObjectProps) {
     super(props);
 
@@ -17,7 +19,24 @@ class Countertop extends Object {
     });
   }
 
-  rebuild() {}
+  rebuild() {
+    const { leftLeg, rightLeg, panel } = this.getChildren();
+
+    if (rightLeg) {
+      rightLeg.position.x =
+        -this.dimension.width / 2 + rightLeg.dimension.width / 2;
+    }
+
+    if (leftLeg) {
+      leftLeg.position.x =
+        this.dimension.width / 2 - leftLeg.dimension.width / 2;
+    }
+
+    if (panel) {
+      panel.rotation = { w: 0.7071068, x: 0.7071068, y: 0, z: 0 };
+      panel.position.x = this.dimension.height / 2 + panel.dimension.depth / 2;
+    }
+  }
 
   resize(
     dimension?: Partial<{ width: number; height: number; depth: number }>
@@ -39,12 +58,15 @@ class Countertop extends Object {
   private getChildren() {
     const rightLeg = this.children.find(
       (child) => child.metadata?.position === "left"
-    ) as IObject | null;
+    ) as Leg | null;
     const leftLeg = this.children.find(
       (child) => child.metadata?.position === "right"
-    ) as IObject | null;
+    ) as Leg | null;
+    const panel = this.children.find(
+      (child) => child.type === Type.PANEL
+    ) as Panel | null;
 
-    return { rightLeg, leftLeg };
+    return { rightLeg, leftLeg, panel };
   }
 
   static createNew() {

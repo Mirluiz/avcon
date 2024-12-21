@@ -3,7 +3,7 @@ import { Grid } from "@mui/material";
 import { App } from "../app/app";
 import { Scene } from "../scene";
 import { RightPanel } from "./RightPanel";
-import { Object } from "../app/view/Object";
+import { Object } from "../app/view/Object/Object";
 
 function useForceUpdate() {
   const [value, setValue] = useState(0);

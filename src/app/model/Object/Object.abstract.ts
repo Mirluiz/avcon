@@ -3,6 +3,7 @@ import { uuidv4 } from "../../services/uuid";
 import { Object as IObject, ObjectProps, Type } from "./Object";
 
 abstract class Object implements IObject {
+  isFrame: boolean = true;
   type: Type = Type.OBJECT;
   useColor: boolean = true;
   color: string | null = null;

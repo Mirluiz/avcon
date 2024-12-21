@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { InputSlider } from "./components/InputSlider";
 import ToggleButtons from "./components/ToggleButton";
-import { Object } from "../app/view/Object";
+import { Object } from "../app/view/Object/Object";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
