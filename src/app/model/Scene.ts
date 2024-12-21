@@ -12,6 +12,7 @@ class Scene {
     const demoCountertop = Countertop.createNew();
     demoCountertop.resize();
     demoCountertop.rebuild();
+
     this.addObject(demoCountertop);
   }
 }

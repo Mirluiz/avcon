@@ -10,11 +10,16 @@ class Countertop extends Object implements IObject, Observer {
   constructor() {
     super();
 
-    // const leftLeg = new BasicView();
-    // const rightLeg = new BasicView();
+    const leftLeg = new BasicView();
+    leftLeg.metadata.id = "leftLeg";
+
+    const rightLeg = new BasicView();
+    rightLeg.metadata.id = "rightLeg";
+
     const panel = new BasicView();
     panel.metadata.id = "panel";
-    // this.children.push(leftLeg, rightLeg, panel);
+
+    this.children.push(leftLeg, rightLeg, panel);
     this.children.push(panel);
   }
 
@@ -23,9 +28,15 @@ class Countertop extends Object implements IObject, Observer {
       super.setModel(model);
 
       const { leftLeg, panel, rightLeg } = model.getChildren();
-      const { panel: panelView } = this.getChildren();
+      const {
+        panel: panelView,
+        leftLeg: lLView,
+        rightLeg: rlView,
+      } = this.getChildren();
 
       if (panel) panelView?.setModel(panel);
+      if (leftLeg) lLView?.setModel(leftLeg);
+      if (rightLeg) rlView?.setModel(rightLeg);
     }
   }
 
@@ -34,7 +45,15 @@ class Countertop extends Object implements IObject, Observer {
       (child) => child.metadata.id === "panel"
     ) as BasicView | null;
 
-    return { panel };
+    const leftLeg = this.children.find(
+      (child) => child.metadata.id === "leftLeg"
+    ) as BasicView | null;
+
+    const rightLeg = this.children.find(
+      (child) => child.metadata.id === "rightLeg"
+    ) as BasicView | null;
+
+    return { panel, leftLeg, rightLeg };
   }
 }
 
