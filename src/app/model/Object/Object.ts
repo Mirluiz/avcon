@@ -18,6 +18,9 @@ interface ObjectProps {
 }
 
 interface Object {
+  asset?: {
+    url: string;
+  };
   useColor: boolean;
   color: string | null;
   name: string;

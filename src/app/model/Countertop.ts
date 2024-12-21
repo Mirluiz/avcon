@@ -11,7 +11,6 @@ class Countertop extends Object {
 
     props.children.forEach((child) => {
       // <<if else>> can be replace to class loader.
-      console.log("leg", child);
       if (child.type === Type.LEG) {
         this.children.push(new Leg(child));
       } else if (child.type === Type.PANEL) {

@@ -3,6 +3,9 @@ import { uuidv4 } from "../../services/uuid";
 import { Object as IObject, ObjectProps, Type } from "./Object";
 
 abstract class Object implements IObject {
+  asset?: {
+    url: string;
+  };
   // pivot: {x: number, y: number, z: number}
   origin: { x: number; y: number; z: number } = { x: 0, y: 0, z: 0 }; // origin is only for root object
   isFrame: boolean = true;
@@ -12,7 +15,7 @@ abstract class Object implements IObject {
   name: string = "";
   uuid: string;
   children: IObject[] = [];
-  metadata?: { position: "left" | "right" };
+  metadata?: Partial<{ position: "left" | "right" }>;
 
   dimension: { width: number; height: number; depth: number } = {
     width: 1,

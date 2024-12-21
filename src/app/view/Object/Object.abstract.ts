@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { BasicMesh, Object as IObject } from "../Object/Object";
 import { Object as ObjectModel } from "../../model/Object/Object";
 import { Observer } from "../../services/Observer";
@@ -153,6 +154,30 @@ abstract class Object implements IObject, Observer {
   setModel(model: ObjectModel) {
     model.addObserver(this);
     this.model = model;
+  }
+
+  async loadGLB() {
+    if (this.model?.asset?.url) {
+      const { url } = this.model.asset;
+
+      const dracoLoader = new DRACOLoader();
+      dracoLoader.setDecoderPath(
+        "/editor2/modules/three/examples/jsm/libs/draco/gltf/"
+      );
+
+      dracoLoader?.load(
+        url,
+        (gltf) => {
+          this.setGlbSize(gltf);
+        },
+        function () {
+          // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+        },
+        (error) => {
+          console.log("An error happened", error);
+        }
+      );
+    }
   }
 
   private isMesh(
