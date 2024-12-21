@@ -1,5 +1,5 @@
 import { Object } from "./Object/Object.abstract";
-import { Object as IObject, ObjectProps } from "./Object/Object";
+import { Object as IObject, ObjectProps, Type } from "./Object/Object";
 
 class Leg extends Object {
   rebuild() {}
@@ -34,6 +34,8 @@ class Leg extends Object {
 
   static createNew() {
     const props: ObjectProps = {
+      type: Type.LEG,
+      children: [],
       name: "Опора",
       dimension: { width: 1.2, depth: 1.2, height: 1 },
       position: { x: 0, y: 0, z: 0 },

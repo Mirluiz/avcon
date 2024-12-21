@@ -1,6 +1,15 @@
 import { Observer } from "../../services/Observer";
 
+enum Type {
+  OBJECT = 1, // 0 is problematic. start from 1. OBJECT is default type
+  COUNTERTOP,
+  PANEL,
+  LEG,
+}
+
 interface ObjectProps {
+  type: Type;
+  children: ObjectProps[];
   name: string;
   dimension: { width: number; height: number; depth: number };
   rotation: { w: number; x: number; y: number; z: number };
@@ -14,6 +23,7 @@ interface Object {
   children: Object[];
   observers: Observer[];
   uuid: string;
+  type: Type;
 
   dimension: { width: number; height: number; depth: number };
   rotation: { w: number; x: number; y: number; z: number };
@@ -29,4 +39,4 @@ interface Object {
   notifyObservers: () => void;
 }
 
-export { Object, ObjectProps };
+export { Object, ObjectProps, Type };

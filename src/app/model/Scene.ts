@@ -9,7 +9,7 @@ class Scene {
   }
 
   init() {
-    const demoCountertop = Countertop.createNew();
+    const demoCountertop = Countertop.createNew(); 
     this.addObject(demoCountertop);
   }
 }

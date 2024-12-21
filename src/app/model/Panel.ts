@@ -1,5 +1,5 @@
 import { Object } from "./Object/Object.abstract";
-import { Object as IObject, ObjectProps } from "./Object/Object";
+import { Object as IObject, ObjectProps, Type } from "./Object/Object";
 
 class Panel extends Object {
   rebuild() {}
@@ -34,7 +34,9 @@ class Panel extends Object {
 
   static createNew() {
     const props: ObjectProps = {
-      name: 'Panel',
+      type: Type.PANEL,
+      children: [],
+      name: "Panel",
       dimension: { width: 0.3, depth: 0.01, height: 0.3 },
       position: { x: 0, y: 0, z: 0 },
       rotation: { w: 1, x: 0, y: 0, z: 0 },
