@@ -2,8 +2,6 @@ import { Object } from "./Object/Object.abstract";
 import { Object as IObject, ObjectProps, Type } from "./Object/Object";
 
 class Panel extends Object {
-  rebuild() {}
-
   resize(
     dimension?: Partial<{ width: number; height: number; depth: number }>
   ) {

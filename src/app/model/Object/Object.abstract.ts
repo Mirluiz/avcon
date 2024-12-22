@@ -3,6 +3,7 @@ import { uuidv4 } from "../../services/uuid";
 import { Object as IObject, ObjectProps, Type } from "./Object";
 
 abstract class Object implements IObject {
+  hightlight: boolean = false;
   asset?: {
     url: string;
   };
@@ -44,8 +45,12 @@ abstract class Object implements IObject {
     }
   }
 
-  rebuild() {}
-  resize() {}
+  rebuild() {
+    this.children.forEach((child) => child.rebuild());
+  }
+  resize() {
+    this.children.forEach((child) => child.resize());
+  }
 
   addObserver(observer: Observer) {
     this.observers.push(observer);

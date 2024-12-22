@@ -132,10 +132,9 @@ abstract class Object implements IObject, Observer {
         };
 
         cloned_glb.scale.set(neededScale.x, neededScale.y, neededScale.z);
-        // cloned_glb.scale.set(neededScale.x, neededScale.y, 1);
 
         this.mesh = cloned_glb;
-
+        this.mesh.add(reserveChildren);
         parent?.add(this.mesh);
       } else {
         mesh.geometry = new THREE.BoxGeometry(
@@ -166,7 +165,7 @@ abstract class Object implements IObject, Observer {
         mesh.material.opacity = 1;
         mesh.material.color.set(this.model.color);
       } else {
-        console.log("put texture here");
+        // console.log("put texture here");
       }
     }
 
@@ -218,11 +217,11 @@ abstract class Object implements IObject, Observer {
           const box = new THREE.Box3().setFromObject(this.glb);
           const size = new THREE.Vector3();
 
-          box.getSize(size);
+          // box.getSize(size);
 
-          this.glbInitSize.x = size.x;
-          this.glbInitSize.y = size.y;
-          this.glbInitSize.z = size.z;
+          // this.glbInitSize.x = size.x;
+          // this.glbInitSize.y = size.y;
+          // this.glbInitSize.z = size.z;
 
           this.refresh();
         },

@@ -39,6 +39,7 @@ class Countertop extends Object {
       panel.rotation = { w: 0.7071068, x: 0.7071068, y: 0, z: 0 };
       panel.position.y = this.dimension.height / 2 + panel.dimension.depth / 2;
     }
+    super.rebuild();
   }
 
   resize(
@@ -103,6 +104,8 @@ class Countertop extends Object {
     rightLeg.metadata = { position: "right" };
 
     props.children = [panel, leftLeg, rightLeg];
+
+    console.log("=", props);
 
     return new Countertop(props);
   }

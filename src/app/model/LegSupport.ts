@@ -3,9 +3,10 @@ import { Object as IObject, ObjectProps, Type } from "./Object/Object";
 
 class LegSupport extends Object {
   color: string | null = "#00";
+  glbSizeFirst = true;
 
   asset?: { url: string } = {
-    url: "leg.glb",
+    url: "prop_01.glb",
   };
 
   resize(
@@ -22,7 +23,7 @@ class LegSupport extends Object {
 
   static createNew() {
     const props: ObjectProps = {
-      type: Type.LEG,
+      type: Type.LEG_SUPPORT,
       children: [],
       name: "Опора",
       dimension: { width: 1.2, depth: 1.2, height: 1 },

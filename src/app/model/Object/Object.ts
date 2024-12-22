@@ -19,6 +19,7 @@ interface ObjectProps {
 }
 
 interface Object {
+  hightlight: boolean;
   asset?: {
     url: string;
   };
