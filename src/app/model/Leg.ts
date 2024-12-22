@@ -40,13 +40,13 @@ class Leg extends Object {
     const { backSupport, frontSupport } = this.getChildren();
 
     if (backSupport) {
-      backSupport.position.x = -width / 2;
-      backSupport.position.y = -height / 2;
+      backSupport.position.x = -width / 2 + backSupport.dimension.width / 2;
+      backSupport.position.y = -height / 2 + backSupport.dimension.height / 2;
     }
 
     if (frontSupport) {
-      frontSupport.position.x = this.dimension.width / 2;
-      frontSupport.position.y = -this.dimension.height / 2;
+      frontSupport.position.x = width / 2 - frontSupport.dimension.width / 2;
+      frontSupport.position.y = -height / 2 + frontSupport.dimension.height / 2;
     }
 
     super.rebuild();

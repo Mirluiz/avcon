@@ -40,7 +40,6 @@ abstract class Object implements IObject, Observer {
 
   private updateByModel() {
     if (this.model) {
-      console.log("");
       this.dimension = { ...this.model.dimension };
       this.rotation = { ...this.model.rotation };
       this.position = { ...this.model.position };
@@ -162,12 +161,6 @@ abstract class Object implements IObject, Observer {
         this.position.z - (this.model?.origin.z ?? 0)
       );
 
-      console.log(
-        "final pos",
-        this.model?.name,
-        finalPos,
-        this.model?.position
-      );
       this.mesh.position.set(finalPos.x, finalPos.y, finalPos.z);
       this.mesh.setRotationFromQuaternion(
         new THREE.Quaternion(
