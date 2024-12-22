@@ -14,7 +14,6 @@ class Leg extends Object {
     props.children.forEach((child) => {
       // <<if else>> can be replace to class loader.
       if (child.type === Type.LEG_SUPPORT) {
-        console.log("ppp", child);
         this.children.push(new LegSupport(child));
       }
     });
@@ -28,16 +27,21 @@ class Leg extends Object {
       if (dimension.height) this.dimension.height = dimension.height;
       if (dimension.depth) this.dimension.depth = dimension.depth;
     }
+
+    const { width, height, depth } = this.dimension;
+    const { backSupport, frontSupport } = this.getChildren();
+
+    backSupport?.resize({ depth: 0.1, width: 0.1, height: 0.1 });
+    frontSupport?.resize({ depth: 0.1, width: 0.1, height: 0.1 });
   }
 
   rebuild(): void {
     const { width, height, depth } = this.dimension;
     const { backSupport, frontSupport } = this.getChildren();
-    console.log("back", backSupport, frontSupport);
 
     if (backSupport) {
-      backSupport.position.x = -this.dimension.width / 2;
-      backSupport.position.y = -this.dimension.height / 2;
+      backSupport.position.x = -width / 2;
+      backSupport.position.y = -height / 2;
     }
 
     if (frontSupport) {

@@ -3,6 +3,7 @@ import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { BasicMesh, Object as IObject } from "../Object/Object";
 import { Object as ObjectModel } from "../../model/Object/Object";
+import { Highlight } from "./../../services/Highlight";
 import { Observer } from "../../services/Observer";
 
 abstract class Object implements IObject, Observer {
@@ -39,6 +40,7 @@ abstract class Object implements IObject, Observer {
 
   private updateByModel() {
     if (this.model) {
+      console.log("");
       this.dimension = { ...this.model.dimension };
       this.rotation = { ...this.model.rotation };
       this.position = { ...this.model.position };
@@ -62,6 +64,7 @@ abstract class Object implements IObject, Observer {
     if (this.glb) {
       this.mesh = this.glb;
     } else {
+      // we can do it as three object3d
       this.mesh = new THREE.Mesh(
         geometry,
         new THREE.MeshStandardMaterial({
@@ -88,6 +91,16 @@ abstract class Object implements IObject, Observer {
       )
     );
 
+    if (this.model?.hightlight) {
+      let box = Highlight.dashedBox({
+        color: 0x00,
+        dimension: this.model.dimension,
+      });
+      if (box) {
+        this.mesh.add(box);
+      }
+    }
+
     this.children.forEach((element) => {
       element.render();
     });
@@ -110,7 +123,7 @@ abstract class Object implements IObject, Observer {
     this.updateByModel();
 
     if (this.mesh) {
-      const reserveChildren = this.mesh.children;
+      const reserveChildren = [...this.mesh.children];
       const parent = this.mesh.parent;
 
       const { mesh } = this;
@@ -118,12 +131,11 @@ abstract class Object implements IObject, Observer {
       if (this.isMesh(mesh)) {
         mesh.geometry.dispose();
         mesh.material.dispose();
-      } else {
-        mesh.removeFromParent();
       }
 
       if (this.glb) {
         mesh.removeFromParent();
+
         const cloned_glb = this.glb.clone();
         const neededScale = {
           x: this.dimension.width / this.glbInitSize.x,
@@ -134,8 +146,8 @@ abstract class Object implements IObject, Observer {
         cloned_glb.scale.set(neededScale.x, neededScale.y, neededScale.z);
 
         this.mesh = cloned_glb;
-        this.mesh.add(reserveChildren);
         parent?.add(this.mesh);
+        this.mesh.add(...reserveChildren);
       } else {
         mesh.geometry = new THREE.BoxGeometry(
           this.dimension.width,
@@ -150,6 +162,12 @@ abstract class Object implements IObject, Observer {
         this.position.z - (this.model?.origin.z ?? 0)
       );
 
+      console.log(
+        "final pos",
+        this.model?.name,
+        finalPos,
+        this.model?.position
+      );
       this.mesh.position.set(finalPos.x, finalPos.y, finalPos.z);
       this.mesh.setRotationFromQuaternion(
         new THREE.Quaternion(
@@ -166,6 +184,16 @@ abstract class Object implements IObject, Observer {
         mesh.material.color.set(this.model.color);
       } else {
         // console.log("put texture here");
+      }
+
+      if (this.model?.hightlight) {
+        let box = Highlight.dashedBox({
+          color: 0x00,
+          dimension: this.model.dimension,
+        });
+        if (box) {
+          this.mesh.add(box);
+        }
       }
     }
 
@@ -198,6 +226,7 @@ abstract class Object implements IObject, Observer {
   setModel(model: ObjectModel) {
     model.addObserver(this);
     this.model = model;
+    this.updateByModel();
   }
 
   async loadGLB() {
@@ -214,14 +243,14 @@ abstract class Object implements IObject, Observer {
         url,
         (gltf) => {
           this.glb = gltf.scene;
-          const box = new THREE.Box3().setFromObject(this.glb);
-          const size = new THREE.Vector3();
+          // const box = new THREE.Box3().setFromObject(this.glb);
+          // const size = new THREE.Vector3();
 
           // box.getSize(size);
 
-          // this.glbInitSize.x = size.x;
-          // this.glbInitSize.y = size.y;
-          // this.glbInitSize.z = size.z;
+          this.glbInitSize.x = this.dimension.width;
+          this.glbInitSize.y = this.dimension.height;
+          this.glbInitSize.z = this.dimension.depth;
 
           this.refresh();
         },

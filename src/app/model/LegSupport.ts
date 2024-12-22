@@ -2,6 +2,7 @@ import { Object } from "./Object/Object.abstract";
 import { Object as IObject, ObjectProps, Type } from "./Object/Object";
 
 class LegSupport extends Object {
+  // hightlight: boolean = true;
   color: string | null = "#00";
   glbSizeFirst = true;
 
