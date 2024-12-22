@@ -118,29 +118,25 @@ abstract class Object implements IObject, Observer {
       if (this.isMesh(mesh)) {
         mesh.geometry.dispose();
         mesh.material.dispose();
-        // mesh.removeFromParent();
       } else {
         mesh.removeFromParent();
       }
 
       if (this.glb) {
+        mesh.removeFromParent();
         const cloned_glb = this.glb.clone();
         const neededScale = {
           x: this.dimension.width / this.glbInitSize.x,
           y: this.dimension.height / this.glbInitSize.y,
           z: this.dimension.depth / this.glbInitSize.z,
         };
-        console.log(
-          "neededScale",
-          this.dimension,
-          this.glbInitSize,
-          this.model?.dimension
-        );
+
         cloned_glb.scale.set(neededScale.x, neededScale.y, neededScale.z);
+        // cloned_glb.scale.set(neededScale.x, neededScale.y, 1);
 
         this.mesh = cloned_glb;
+
         parent?.add(this.mesh);
-        // this.mesh.children = reserveChildren;
       } else {
         mesh.geometry = new THREE.BoxGeometry(
           this.dimension.width,
@@ -154,6 +150,7 @@ abstract class Object implements IObject, Observer {
         this.position.y - (this.model?.origin.y ?? 0),
         this.position.z - (this.model?.origin.z ?? 0)
       );
+
       this.mesh.position.set(finalPos.x, finalPos.y, finalPos.z);
       this.mesh.setRotationFromQuaternion(
         new THREE.Quaternion(
@@ -220,6 +217,7 @@ abstract class Object implements IObject, Observer {
           this.glb = gltf.scene;
           const box = new THREE.Box3().setFromObject(this.glb);
           const size = new THREE.Vector3();
+
           box.getSize(size);
 
           this.glbInitSize.x = size.x;

@@ -32,6 +32,7 @@ class Countertop extends Object {
       leftLeg.rotation = { w: 0.7071068, x: 0, y: -0.7071068, z: 0 };
       leftLeg.position.x =
         this.dimension.width / 2 - leftLeg.dimension.depth / 2;
+      leftLeg.position.y = 0;
     }
 
     if (panel) {

@@ -5,15 +5,16 @@ import { BasicView } from "./Object/Object.basic";
 import { Object as IObject } from "./Object/Object";
 import { Object as ObjectModel } from "./../model/Object/Object";
 import { Countertop as CountertopModel } from "../model/Countertop";
+import { Leg } from "./Leg";
 
 class Countertop extends Object implements IObject, Observer {
   constructor() {
     super();
 
-    const leftLeg = new BasicView();
+    const leftLeg = new Leg();
     leftLeg.metadata.id = "leftLeg";
 
-    const rightLeg = new BasicView();
+    const rightLeg = new Leg();
     rightLeg.metadata.id = "rightLeg";
 
     const panel = new BasicView();

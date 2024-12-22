@@ -32,6 +32,7 @@ export const GuiApp = () => {
             const mergedMesh = view.merge();
 
             if (mergedMesh) three.scene.add(mergedMesh);
+            // three.addDemo();
           });
         });
 

@@ -1,5 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Vector3 } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 
@@ -82,6 +84,68 @@ class Scene {
 
     this.renderer.render(this.scene, this.camera);
     this.stats.update();
+  }
+
+  addDemo() {
+    const url = "/leg.glb";
+
+    const dracoLoader = new DRACOLoader();
+    const loader = new GLTFLoader();
+    // public/three/examples/jsm/libs/draco
+    dracoLoader.setDecoderPath("/three/examples/jsm/libs/draco/gltf/");
+    loader.setDRACOLoader(dracoLoader);
+
+    loader?.load(
+      url,
+      (gltf) => {
+        const glb = gltf.scene.children[0].children[0] as THREE.Mesh;
+        glb.parent = null;
+
+        const positionAttribute = glb.geometry.attributes.position;
+        const box = new THREE.Box3();
+
+        for (let i = 0; i < positionAttribute.count; i++) {
+          const vertex = new THREE.Vector3();
+          vertex.fromBufferAttribute(positionAttribute, i);
+          box.expandByPoint(vertex);
+        }
+
+        console.log("Bounding Box:", box);
+
+        // Compute the local bounding box
+        // glb.matrixWorldNeedsUpdate = true;
+        // glb.geometry.computeBoundingBox();
+        // glb.geometry.computeBoundingSphere();
+        // glb.geometry.computeVertexNormals();
+        // glb.geometry.computeTangents();
+
+        // glb.updateMatrix();
+        // const identityMatrix = new THREE.Matrix4();
+        // glb.applyMatrix4(identityMatrix);
+
+        // const box = new THREE.Box3().setFromObject(glb);
+        // const size = new THREE.Vector3();
+        // const center = box.getCenter(new THREE.Vector3());
+        // glb.position.sub(center);
+
+        // box.getSize(size);
+        // console.log("size", size);
+        // console.log("obj", glb);
+
+        // const boxHelper = new THREE.Box3Helper(
+        //   new THREE.Box3().setFromObject(glb),
+        //   0xff0000
+        // );
+        // this.scene?.add(boxHelper);
+        // this.scene.add(glb);
+      },
+      function () {
+        // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+      },
+      (error) => {
+        console.log("An error happened", error);
+      }
+    );
   }
 }
 
