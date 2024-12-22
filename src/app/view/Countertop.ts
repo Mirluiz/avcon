@@ -8,16 +8,16 @@ import { Countertop as CountertopModel } from "../model/Countertop";
 import { Leg } from "./Leg";
 
 class Countertop extends Object implements IObject, Observer {
-  constructor() {
-    super();
+  constructor(readonly parent: IObject | null) {
+    super(parent);
 
-    const leftLeg = new Leg();
+    const leftLeg = new Leg(this);
     leftLeg.metadata.id = "leftLeg";
 
-    const rightLeg = new Leg();
+    const rightLeg = new Leg(this);
     rightLeg.metadata.id = "rightLeg";
 
-    const panel = new BasicView();
+    const panel = new BasicView(this);
     panel.metadata.id = "panel";
 
     this.children.push(leftLeg, rightLeg, panel);

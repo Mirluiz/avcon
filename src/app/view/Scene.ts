@@ -10,7 +10,7 @@ class Scene {
 
   init() {
     this.sceneModel.objects.forEach((model) => {
-      const view = new Countertop();
+      const view = new Countertop(null);
       view.setModel(model);
 
       this.views.push(view);

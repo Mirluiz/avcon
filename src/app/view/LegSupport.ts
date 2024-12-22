@@ -5,47 +5,10 @@ import { Object as IObject } from "./Object/Object";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Object as ObjectModel } from "../model/Object/Object";
-import { Leg as LegModel } from "./../model/Leg";
+import { Leg as LegModel } from "../model/Leg";
 import { BasicView } from "./Object/Object.basic";
-import { LegSupport } from "./LegSupport";
 
-class Leg extends Object implements IObject, Observer {
-  constructor(readonly parent: IObject | null) {
-    super(parent);
-
-    const frontS = new LegSupport(this);
-    frontS.metadata.position = "front";
-
-    const backS = new LegSupport(this);
-    backS.metadata.position = "back";
-
-    this.children.push(frontS, backS);
-  }
-
-  setModel(model: ObjectModel): void {
-    super.setModel(model);
-
-    if (model instanceof LegModel) {
-      const { backSupport, frontSupport } = model.getChildren();
-      const { frontSup, backSup } = this.getChildren();
-
-      if (frontSupport) frontSup?.setModel(frontSupport);
-      if (backSupport) backSup?.setModel(backSupport);
-    }
-  }
-
-  getChildren() {
-    const frontSup = this.children.find(
-      (child) => child.metadata.position === "front"
-    ) as LegSupport | null;
-
-    const backSup = this.children.find(
-      (child) => child.metadata.position === "back"
-    ) as LegSupport | null;
-
-    return { frontSup, backSup };
-  }
-
+class LegSupport extends Object implements IObject, Observer {
   async loadGLB() {
     if (this.model?.asset?.url) {
       const { url } = this.model.asset;
@@ -61,8 +24,8 @@ class Leg extends Object implements IObject, Observer {
         (gltf) => {
           this.glb = gltf.scene;
 
-          if (gltf.scene.children[0]?.children[0]) {
-            const glbToSize = gltf.scene.children[0]?.children[0] as THREE.Mesh;
+          if (gltf.scene.children[0]) {
+            const glbToSize = gltf.scene.children[0] as THREE.Mesh;
 
             const positionAttribute = glbToSize.geometry.attributes.position;
             const box = new THREE.Box3();
@@ -79,11 +42,17 @@ class Leg extends Object implements IObject, Observer {
               gltf.scene.children[0]
             );
             const center = modelBox.getCenter(new THREE.Vector3());
-            gltf.scene.children[0].position.sub(center);
+            gltf.scene.position.sub(center);
 
             this.glbInitSize.x = size.x;
             this.glbInitSize.y = size.y;
             this.glbInitSize.z = size.z;
+
+            this.model?.resize({
+              width: this.glbInitSize.x,
+              height: this.glbInitSize.y,
+              depth: this.glbInitSize.z,
+            });
           }
 
           this.hardRefresh();
@@ -100,4 +69,4 @@ class Leg extends Object implements IObject, Observer {
   }
 }
 
-export { Leg };
+export { LegSupport };

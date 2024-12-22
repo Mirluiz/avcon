@@ -27,12 +27,6 @@ class Leg extends Object {
       if (dimension.height) this.dimension.height = dimension.height;
       if (dimension.depth) this.dimension.depth = dimension.depth;
     }
-
-    const { width, height, depth } = this.dimension;
-    const { backSupport, frontSupport } = this.getChildren();
-
-    backSupport?.resize({ depth: 0.1, width: 0.1, height: 0.1 });
-    frontSupport?.resize({ depth: 0.1, width: 0.1, height: 0.1 });
   }
 
   rebuild(): void {

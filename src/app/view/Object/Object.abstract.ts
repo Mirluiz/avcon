@@ -2,24 +2,27 @@ import * as THREE from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { BasicMesh, Object as IObject } from "../Object/Object";
-import { Object as ObjectModel } from "../../model/Object/Object";
+import { Object as ObjectModel, Type } from "../../model/Object/Object";
 import { Highlight } from "./../../services/Highlight";
 import { Observer } from "../../services/Observer";
 
 abstract class Object implements IObject, Observer {
+  constructor(readonly parent: IObject | null) {}
+
   glbInitSize: { x: number; y: number; z: number } = { x: 1, y: 1, z: 1 };
   glb: THREE.Group<THREE.Object3DEventMap> | null = null;
 
   metadata: { [x: string]: any } = {};
   children: Object[] = [];
   model: ObjectModel | null = null;
+
+  parentMesh: BasicMesh | null = null;
   mesh: BasicMesh | null = null;
+
   material: THREE.MeshStandardMaterial | null = null;
   texture: THREE.Texture | null = null;
 
-  fetchingGLB: boolean = false;
-
-  constructor() {}
+  fetched: boolean = false;
 
   dimension: { width: number; height: number; depth: number } = {
     width: 1,
@@ -49,8 +52,7 @@ abstract class Object implements IObject, Observer {
   render() {
     this.updateByModel();
 
-    if (this.model?.asset) {
-      this.fetchingGLB = true;
+    if (this.model?.asset && !this.fetched) {
       this.loadGLB();
     }
 
@@ -61,7 +63,16 @@ abstract class Object implements IObject, Observer {
     );
 
     if (this.glb) {
-      this.mesh = this.glb;
+      const cloned_glb = this.glb.clone();
+      const neededScale = {
+        x: this.dimension.width / this.glbInitSize.x,
+        y: this.dimension.height / this.glbInitSize.y,
+        z: this.dimension.depth / this.glbInitSize.z,
+      };
+
+      cloned_glb.scale.set(neededScale.x, neededScale.y, neededScale.z);
+
+      this.mesh = cloned_glb;
     } else {
       // we can do it as three object3d
       this.mesh = new THREE.Mesh(
@@ -90,15 +101,15 @@ abstract class Object implements IObject, Observer {
       )
     );
 
-    if (this.model?.hightlight) {
-      let box = Highlight.dashedBox({
-        color: 0x00,
-        dimension: this.model.dimension,
-      });
-      if (box) {
-        this.mesh.add(box);
-      }
-    }
+    // if (this.model?.hightlight) {
+    //   let box = Highlight.dashedBox({
+    //     color: 0x00,
+    //     dimension: this.model.dimension,
+    //   });
+    //   if (box) {
+    //     this.mesh.add(box);
+    //   }
+    // }
 
     this.children.forEach((element) => {
       element.render();
@@ -122,32 +133,9 @@ abstract class Object implements IObject, Observer {
     this.updateByModel();
 
     if (this.mesh) {
-      const reserveChildren = [...this.mesh.children];
-      const parent = this.mesh.parent;
-
       const { mesh } = this;
 
-      if (this.isMesh(mesh)) {
-        mesh.geometry.dispose();
-        mesh.material.dispose();
-      }
-
-      if (this.glb) {
-        mesh.removeFromParent();
-
-        const cloned_glb = this.glb.clone();
-        const neededScale = {
-          x: this.dimension.width / this.glbInitSize.x,
-          y: this.dimension.height / this.glbInitSize.y,
-          z: this.dimension.depth / this.glbInitSize.z,
-        };
-
-        cloned_glb.scale.set(neededScale.x, neededScale.y, neededScale.z);
-
-        this.mesh = cloned_glb;
-        parent?.add(this.mesh);
-        this.mesh.add(...reserveChildren);
-      } else {
+      {
         mesh.geometry = new THREE.BoxGeometry(
           this.dimension.width,
           this.dimension.height,
@@ -195,21 +183,27 @@ abstract class Object implements IObject, Observer {
 
   dispose() {
     const { mesh } = this;
+    this.children.forEach((child) => child.dispose());
 
-    // this?.children.forEach((child) => {
-    //   child.dispose();
-    // });
+    // @ts-ignore
+    mesh?.material?.dispose();
+    // @ts-ignore
+    mesh?.geometry?.dispose();
 
-    if (mesh) {
-      if (this.isMesh(mesh)) {
-        mesh?.material?.dispose();
-        mesh.geometry.dispose();
-
-        if (mesh.material instanceof THREE.MeshBasicMaterial) {
-          mesh?.material?.map?.dispose();
-        }
-      }
+    // @ts-ignore
+    if (mesh.material instanceof THREE.MeshBasicMaterial) {
+      // @ts-ignore
+      mesh?.material?.map?.dispose();
     }
+
+    this.mesh?.removeFromParent();
+  }
+
+  hardRefresh() {
+    this.dispose();
+
+    const merged = this.merge();
+    if (merged) this.parent?.mesh?.add(merged);
   }
 
   trigger() {
@@ -236,16 +230,14 @@ abstract class Object implements IObject, Observer {
         url,
         (gltf) => {
           this.glb = gltf.scene;
-          // const box = new THREE.Box3().setFromObject(this.glb);
-          // const size = new THREE.Vector3();
-
-          // box.getSize(size);
 
           this.glbInitSize.x = this.dimension.width;
           this.glbInitSize.y = this.dimension.height;
           this.glbInitSize.z = this.dimension.depth;
 
-          this.refresh();
+          this.hardRefresh();
+
+          this.fetched = true;
         },
         function () {
           // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
