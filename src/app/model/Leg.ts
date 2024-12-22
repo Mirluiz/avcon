@@ -3,9 +3,9 @@ import { Object as IObject, ObjectProps, Type } from "./Object/Object";
 
 class Leg extends Object {
   color: string | null = "#00";
-  asset?: { url: string; } = {
-    url: '/leg.glb';
-  }
+  asset?: { url: string } = {
+    url: "leg.glb",
+  };
   rebuild() {}
 
   resize(

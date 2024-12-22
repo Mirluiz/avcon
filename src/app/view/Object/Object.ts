@@ -1,10 +1,9 @@
 import * as THREE from "three";
 import { Object as ObjectModel } from "../../model/Object/Object";
 
-export type BasicMesh = THREE.Mesh<
-  THREE.BoxGeometry,
-  THREE.MeshStandardMaterial
->;
+export type BasicMesh =
+  | THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>
+  | THREE.Group<THREE.Object3DEventMap>;
 
 interface Object {
   metadata: { [key in string]: any };

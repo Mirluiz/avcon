@@ -71,7 +71,6 @@ class Countertop extends Object {
     const panel = this.children.find(
       (child) => child.type === Type.PANEL
     ) as Panel | null;
-    console.log("rigt", rightLeg, leftLeg);
 
     return { rightLeg, leftLeg, panel };
   }

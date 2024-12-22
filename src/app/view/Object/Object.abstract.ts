@@ -1,16 +1,22 @@
 import * as THREE from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { BasicMesh, Object as IObject } from "../Object/Object";
 import { Object as ObjectModel } from "../../model/Object/Object";
 import { Observer } from "../../services/Observer";
 
 abstract class Object implements IObject, Observer {
+  glbInitSize: { x: number; y: number; z: number } = { x: 1, y: 1, z: 1 };
+  glb: THREE.Group<THREE.Object3DEventMap> | null = null;
+
   metadata: { [x: string]: any } = {};
   children: Object[] = [];
   model: ObjectModel | null = null;
   mesh: BasicMesh | null = null;
   material: THREE.MeshStandardMaterial | null = null;
   texture: THREE.Texture | null = null;
+
+  fetchingGLB: boolean = false;
 
   constructor() {}
 
@@ -42,19 +48,30 @@ abstract class Object implements IObject, Observer {
   render() {
     this.updateByModel();
 
+    if (this.model?.asset) {
+      this.fetchingGLB = true;
+      this.loadGLB();
+    }
+
     const geometry = new THREE.BoxGeometry(
       this.dimension.width,
       this.dimension.height,
       this.dimension.depth
     );
-    this.mesh = new THREE.Mesh(
-      geometry,
-      new THREE.MeshStandardMaterial({
-        transparent: true,
-        opacity: 0,
-        depthWrite: false,
-      })
-    );
+
+    if (this.glb) {
+      this.mesh = this.glb;
+    } else {
+      this.mesh = new THREE.Mesh(
+        geometry,
+        new THREE.MeshStandardMaterial({
+          transparent: true,
+          side: THREE.DoubleSide,
+          opacity: 0,
+          depthWrite: false,
+        })
+      );
+    }
 
     const finalPos = new THREE.Vector3(
       this.position.x - (this.model?.origin.x ?? 0),
@@ -93,13 +110,44 @@ abstract class Object implements IObject, Observer {
     this.updateByModel();
 
     if (this.mesh) {
+      const reserveChildren = this.mesh.children;
+      const parent = this.mesh.parent;
+
       const { mesh } = this;
 
-      mesh.geometry = new THREE.BoxGeometry(
-        this.dimension.width,
-        this.dimension.height,
-        this.dimension.depth
-      );
+      if (this.isMesh(mesh)) {
+        mesh.geometry.dispose();
+        mesh.material.dispose();
+        // mesh.removeFromParent();
+      } else {
+        mesh.removeFromParent();
+      }
+
+      if (this.glb) {
+        const cloned_glb = this.glb.clone();
+        const neededScale = {
+          x: this.dimension.width / this.glbInitSize.x,
+          y: this.dimension.height / this.glbInitSize.y,
+          z: this.dimension.depth / this.glbInitSize.z,
+        };
+        console.log(
+          "neededScale",
+          this.dimension,
+          this.glbInitSize,
+          this.model?.dimension
+        );
+        cloned_glb.scale.set(neededScale.x, neededScale.y, neededScale.z);
+
+        this.mesh = cloned_glb;
+        parent?.add(this.mesh);
+        // this.mesh.children = reserveChildren;
+      } else {
+        mesh.geometry = new THREE.BoxGeometry(
+          this.dimension.width,
+          this.dimension.height,
+          this.dimension.depth
+        );
+      }
 
       const finalPos = new THREE.Vector3(
         this.position.x - (this.model?.origin.x ?? 0),
@@ -116,7 +164,7 @@ abstract class Object implements IObject, Observer {
         )
       );
 
-      if (this.model?.useColor && this.model.color) {
+      if (this.model?.useColor && this.model.color && this.isMesh(mesh)) {
         mesh.material.transparent = false;
         mesh.material.opacity = 1;
         mesh.material.color.set(this.model.color);
@@ -161,14 +209,24 @@ abstract class Object implements IObject, Observer {
       const { url } = this.model.asset;
 
       const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath(
-        "/editor2/modules/three/examples/jsm/libs/draco/gltf/"
-      );
+      const loader = new GLTFLoader();
+      // public/three/examples/jsm/libs/draco
+      dracoLoader.setDecoderPath("/three/examples/jsm/libs/draco/gltf/");
+      loader.setDRACOLoader(dracoLoader);
 
-      dracoLoader?.load(
+      loader?.load(
         url,
         (gltf) => {
-          this.setGlbSize(gltf);
+          this.glb = gltf.scene;
+          const box = new THREE.Box3().setFromObject(this.glb);
+          const size = new THREE.Vector3();
+          box.getSize(size);
+
+          this.glbInitSize.x = size.x;
+          this.glbInitSize.y = size.y;
+          this.glbInitSize.z = size.z;
+
+          this.refresh();
         },
         function () {
           // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
