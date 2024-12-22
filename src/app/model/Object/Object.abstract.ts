@@ -15,7 +15,7 @@ abstract class Object implements IObject {
   name: string = "";
   uuid: string;
   children: IObject[] = [];
-  metadata?: Partial<{ position: "left" | "right" }>;
+  metadata?: Partial<{ position: "left" | "right" | "front" | "back" }>;
 
   dimension: { width: number; height: number; depth: number } = {
     width: 1,

@@ -91,7 +91,6 @@ class Scene {
 
     const dracoLoader = new DRACOLoader();
     const loader = new GLTFLoader();
-    // public/three/examples/jsm/libs/draco
     dracoLoader.setDecoderPath("/three/examples/jsm/libs/draco/gltf/");
     loader.setDRACOLoader(dracoLoader);
 
@@ -109,35 +108,6 @@ class Scene {
           vertex.fromBufferAttribute(positionAttribute, i);
           box.expandByPoint(vertex);
         }
-
-        console.log("Bounding Box:", box);
-
-        // Compute the local bounding box
-        // glb.matrixWorldNeedsUpdate = true;
-        // glb.geometry.computeBoundingBox();
-        // glb.geometry.computeBoundingSphere();
-        // glb.geometry.computeVertexNormals();
-        // glb.geometry.computeTangents();
-
-        // glb.updateMatrix();
-        // const identityMatrix = new THREE.Matrix4();
-        // glb.applyMatrix4(identityMatrix);
-
-        // const box = new THREE.Box3().setFromObject(glb);
-        // const size = new THREE.Vector3();
-        // const center = box.getCenter(new THREE.Vector3());
-        // glb.position.sub(center);
-
-        // box.getSize(size);
-        // console.log("size", size);
-        // console.log("obj", glb);
-
-        // const boxHelper = new THREE.Box3Helper(
-        //   new THREE.Box3().setFromObject(glb),
-        //   0xff0000
-        // );
-        // this.scene?.add(boxHelper);
-        // this.scene.add(glb);
       },
       function () {
         // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')

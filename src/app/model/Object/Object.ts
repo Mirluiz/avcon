@@ -5,10 +5,11 @@ enum Type {
   COUNTERTOP,
   PANEL,
   LEG,
+  LEG_SUPPORT,
 }
 
 interface ObjectProps {
-  metadata?: Partial<{ position: "left" | "right" }>;
+  metadata?: Partial<{ position: "left" | "right" | "back" | "front" }>;
   type: Type;
   children: ObjectProps[];
   name: string;
@@ -35,7 +36,7 @@ interface Object {
   origin: { x: number; y: number; z: number };
 
   metadata?: Partial<{
-    position: "left" | "right";
+    position: "left" | "right" | "front" | "back";
   }>;
 
   rebuild: () => void;

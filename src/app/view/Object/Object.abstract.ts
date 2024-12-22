@@ -68,7 +68,7 @@ abstract class Object implements IObject, Observer {
           transparent: true,
           side: THREE.DoubleSide,
           opacity: 0,
-          depthWrite: false,
+          // depthWrite: false,
         })
       );
     }

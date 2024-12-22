@@ -4,8 +4,35 @@ import { Observer } from "../services/Observer";
 import { Object as IObject } from "./Object/Object";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Object as ObjectModel } from "../model/Object/Object";
+import { Leg as LegModel } from "./../model/Leg";
+import { BasicView } from "./Object/Object.basic";
 
 class Leg extends Object implements IObject, Observer {
+  setModel(model: ObjectModel): void {
+    super.setModel(model);
+
+    if (model instanceof LegModel) {
+      const { backSupport, frontSupport } = model.getChildren();
+      const { frontSup, backSup } = this.getChildren();
+
+      if (frontSupport) frontSup?.setModel(frontSupport);
+      if (backSupport) backSup?.setModel(backSupport);
+    }
+  }
+
+  getChildren() {
+    const frontSup = this.children.find(
+      (child) => child.metadata.position === "front"
+    ) as BasicView | null;
+
+    const backSup = this.children.find(
+      (child) => child.metadata.position === "back"
+    ) as BasicView | null;
+
+    return { frontSup, backSup };
+  }
+
   async loadGLB() {
     if (this.model?.asset?.url) {
       const { url } = this.model.asset;
