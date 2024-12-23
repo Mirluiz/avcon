@@ -14,6 +14,7 @@ import { InputSlider } from "./components/InputSlider";
 import ToggleButtons from "./components/ToggleButton";
 import { Object } from "../app/view/Object/Object";
 import { Countertop } from "../app/model/Countertop";
+import { Countertop as ViewC } from "../app/view/Countertop";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -164,7 +165,9 @@ export const RightPanel = (props: { item: Object | null }) => {
           <Typography>Опоры</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {props.item && <ToggleButtons item={props.item} />}
+          {props.item && props.item instanceof ViewC && (
+            <ToggleButtons item={props.item} />
+          )}
         </AccordionDetails>
       </Accordion>
     </Grid>

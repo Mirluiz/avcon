@@ -59,7 +59,7 @@ class Leg extends Object implements IObject, Observer {
       loader?.load(
         url,
         (gltf) => {
-          fix1(gltf.scene);
+          fixGLB(gltf.scene);
           this.glb = gltf.scene;
 
           if (gltf.scene.children[0]?.children[0]) {
@@ -89,6 +89,7 @@ class Leg extends Object implements IObject, Observer {
 
           this.hardRefresh();
           this.fetched = true;
+          this.model?.notifyObservers();
         },
         function () {
           // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
@@ -101,9 +102,9 @@ class Leg extends Object implements IObject, Observer {
   }
 }
 
-const fix1 = (mesh: BasicMesh) => {
+const fixGLB = (mesh: BasicMesh) => {
   mesh.traverse((child) => {
-    if ((child as THREE.Mesh<THREE.BoxGeometry>).isMesh) {
+    if (Object.isMesh(child)) {
       {
         const positionAttribute = child.geometry.attributes.position;
         const box = new THREE.Box3();
@@ -115,11 +116,8 @@ const fix1 = (mesh: BasicMesh) => {
         }
 
         child.geometry.boundingBox = box;
-        child.updateMatrix(true);
-
-        // fix(gltf.scene);
+        child.updateMatrix();
       }
-      // mesh.geometry.computeBoundingBox();
     }
   });
 };

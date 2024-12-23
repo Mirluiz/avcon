@@ -134,7 +134,7 @@ abstract class Object implements IObject, Observer {
   refresh() {
     this.updateByModel();
 
-    if (this.mesh && this.isMesh(this.mesh)) {
+    if (this.mesh && Object.isMesh(this.mesh)) {
       const { mesh } = this;
 
       {
@@ -161,7 +161,7 @@ abstract class Object implements IObject, Observer {
         )
       );
 
-      if (this.model?.useColor && this.model.color && this.isMesh(mesh)) {
+      if (this.model?.useColor && this.model.color && Object.isMesh(mesh)) {
         mesh.material.transparent = false;
         mesh.material.opacity = 1;
         mesh.material.color.set(this.model.color);
@@ -290,9 +290,9 @@ abstract class Object implements IObject, Observer {
     }
   }
 
-  private isMesh(
+  static isMesh(
     obj: THREE.Object3D
-  ): obj is THREE.Mesh<THREE.BoxGeometry, THREE.Material> {
+  ): obj is THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial> {
     return "isMesh" in obj;
   }
 }

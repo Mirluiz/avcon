@@ -57,6 +57,7 @@ class LegSupport extends Object implements IObject, Observer {
 
           this.hardRefresh();
           this.fetched = true;
+          this.model?.notifyObservers();
         },
         function () {
           // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')

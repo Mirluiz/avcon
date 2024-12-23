@@ -35,12 +35,12 @@ class Leg extends Object {
 
     if (backSupport) {
       backSupport.position.x = -width / 2 + backSupport.dimension.width / 2;
-      backSupport.position.y = -height / 2 + backSupport.dimension.height / 2;
+      backSupport.position.y = -height / 2 - backSupport.dimension.height / 2;
     }
 
     if (frontSupport) {
       frontSupport.position.x = width / 2 - frontSupport.dimension.width / 2;
-      frontSupport.position.y = -height / 2 + frontSupport.dimension.height / 2;
+      frontSupport.position.y = -height / 2 - frontSupport.dimension.height / 2;
     }
 
     super.rebuild();
