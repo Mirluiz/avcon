@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { Object } from "./Object/Object.abstract";
 import { Observer } from "../services/Observer";
-import { Object as IObject } from "./Object/Object";
+import { BasicMesh, Object as IObject } from "./Object/Object";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Object as ObjectModel } from "../model/Object/Object";
@@ -59,6 +59,7 @@ class Leg extends Object implements IObject, Observer {
       loader?.load(
         url,
         (gltf) => {
+          fix1(gltf.scene);
           this.glb = gltf.scene;
 
           if (gltf.scene.children[0]?.children[0]) {
@@ -99,5 +100,28 @@ class Leg extends Object implements IObject, Observer {
     }
   }
 }
+
+const fix1 = (mesh: BasicMesh) => {
+  mesh.traverse((child) => {
+    if ((child as THREE.Mesh<THREE.BoxGeometry>).isMesh) {
+      {
+        const positionAttribute = child.geometry.attributes.position;
+        const box = new THREE.Box3();
+
+        for (let i = 0; i < positionAttribute.count; i++) {
+          const vertex = new THREE.Vector3();
+          vertex.fromBufferAttribute(positionAttribute, i);
+          box.expandByPoint(vertex);
+        }
+
+        child.geometry.boundingBox = box;
+        child.updateMatrix(true);
+
+        // fix(gltf.scene);
+      }
+      // mesh.geometry.computeBoundingBox();
+    }
+  });
+};
 
 export { Leg };

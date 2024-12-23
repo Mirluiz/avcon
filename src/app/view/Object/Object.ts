@@ -3,7 +3,7 @@ import { Object as ObjectModel } from "../../model/Object/Object";
 
 export type BasicMesh =
   | THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>
-  | THREE.Group<THREE.Object3DEventMap>;
+  | THREE.Object3D;
 
 interface Object {
   metadata: { [key in string]: any };

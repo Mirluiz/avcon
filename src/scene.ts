@@ -91,23 +91,93 @@ class Scene {
 
     const dracoLoader = new DRACOLoader();
     const loader = new GLTFLoader();
-    dracoLoader.setDecoderPath("/three/examples/jsm/libs/draco/gltf/");
-    loader.setDRACOLoader(dracoLoader);
+    // public/three/examples/jsm/libs/draco
+    // dracoLoader.setDecoderPath("/three/examples/jsm/libs/draco/gltf/");
+    // loader.setDRACOLoader(dracoLoader);
 
     loader?.load(
       url,
       (gltf) => {
-        const glb = gltf.scene.children[0].children[0] as THREE.Mesh;
-        glb.parent = null;
+        // gltf.scene.matrix.identity();
+        console.log("glt", gltf);
+        // fix1(gltf.scene);
+        // gltf.scene.traverse((child) => {
+        //   if (child.isMesh) child.geometry.computeBoundingBox();
+        // });
+        // gltf.scene.children[0].clear();
+        // gltf.scene.children[0].children[0].removeFromParent();
 
-        const positionAttribute = glb.geometry.attributes.position;
-        const box = new THREE.Box3();
+        // gltf.scene.updateMatrixWorld(true);
 
-        for (let i = 0; i < positionAttribute.count; i++) {
-          const vertex = new THREE.Vector3();
-          vertex.fromBufferAttribute(positionAttribute, i);
-          box.expandByPoint(vertex);
-        }
+        // gltf.scene.children[0].children[1].clear();
+
+        // normalize(gltf.scene);
+
+        // glb.parent = null;
+
+        // {
+        //   const positionAttribute =
+        //     gltf.scene.children[0].children[0].geometry.attributes.position;
+        //   const box = new THREE.Box3();
+
+        //   for (let i = 0; i < positionAttribute.count; i++) {
+        //     const vertex = new THREE.Vector3();
+        //     vertex.fromBufferAttribute(positionAttribute, i);
+        //     box.expandByPoint(vertex);
+        //   }
+        //   console.log("box", box);
+        //   // gltf.scene.children[0].children[0].geometry.boundingBox = box;
+        //   // gltf.scene.children[0].children[0].geometry.computeBoundingBox();
+        //   console.log(
+        //     "gltf.scene.children[0].children[0]",
+        //     gltf.scene.children[0].children[0]
+        //   );
+        //   // fix(gltf.scene);
+        // }
+
+        // console.log("Bounding Box:", box);
+
+        // Visualize the bounding box
+        // const boxHelper = new THREE.Box3Helper(box, 0xff0000); // Red color
+        // this.scene.add(boxHelper);
+
+        // Compute the local bounding box
+        // glb.matrixWorldNeedsUpdate = true;
+        // glb.geometry.computeBoundingBox();
+        // glb.geometry.computeBoundingSphere();
+        // glb.geometry.computeVertexNormals();
+        // glb.geometry.computeTangents();
+
+        // glb.updateMatrix();
+        // const identityMatrix = new THREE.Matrix4();
+        // glb.applyMatrix4(identityMatrix);
+
+        const box = new THREE.Box3().setFromObject(gltf.scene);
+        const size = new THREE.Vector3();
+        // const center = box.getCenter(new THREE.Vector3());
+
+        box.getSize(size);
+        // glb.position.add(new Vector3(25, size.y / 2, size.z / 2));
+        console.log("size", size);
+        // console.log("obj", glb);
+
+        // {
+        //   const boxHelper = new THREE.Box3Helper(box, 0xff0000);
+        //   this.scene?.add(boxHelper);
+        // }
+
+        const boxHelper1 = new THREE.Box3Helper(
+          new THREE.Box3().setFromObject(gltf.scene),
+          0xff0000
+        );
+        this.scene?.add(boxHelper1);
+        this.scene.add(gltf.scene);
+
+        // {
+        //   const mesh = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.8, 0.03));
+        //   mesh.position.x = 1.4;
+        //   this.scene.add(mesh);
+        // }
       },
       function () {
         // console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
@@ -118,5 +188,71 @@ class Scene {
     );
   }
 }
+
+// const fix = (mesh: any) => {
+//   mesh.traverse((child) => {
+//     if ((child as THREE.Mesh).isMesh) {
+//       const mesh = child as THREE.Mesh;
+//       const box = new THREE.Box3().setFromObject(mesh);
+//       const center = new THREE.Vector3();
+//       box.getCenter(center);
+
+//       // Center the geometry
+//       mesh.geometry.center();
+
+//       // Adjust the position to maintain visual alignment
+//       mesh.position.add(center);
+
+//       // Recompute bounding box after centering
+//       mesh.geometry.computeBoundingBox();
+//     }
+//   });
+// };
+
+// const fix1 = (mesh: any) => {
+//   mesh.traverse((child) => {
+//     if ((child as THREE.Mesh).isMesh) {
+//       {
+//         const positionAttribute = child.geometry.attributes.position;
+//         const box = new THREE.Box3();
+
+//         for (let i = 0; i < positionAttribute.count; i++) {
+//           const vertex = new THREE.Vector3();
+//           vertex.fromBufferAttribute(positionAttribute, i);
+//           box.expandByPoint(vertex);
+//         }
+//         console.log("box", box);
+//         child.geometry.boundingBox = box;
+//         child.updateMatrix(true);
+
+//         // fix(gltf.scene);
+//       }
+//       // mesh.geometry.computeBoundingBox();
+//     }
+//   });
+// };
+
+// const normalize = (mesh: THREE.Mesh) => {
+//   mesh.traverse((child) => {
+//     if (child.isMesh) {
+//       console.log("-1233");
+//       child.geometry.computeBoundingBox();
+//       const center = new THREE.Vector3();
+//       child.geometry.boundingBox.getCenter(center);
+//       child.geometry.center(); // Centers the geometry
+//       child.position.add(center); // Adjusts the position
+//     }
+
+//     if (child.isMesh) {
+//       console.log("-1223");
+//       child.geometry.computeBoundingBox();
+//       child.geometry.computeBoundingSphere();
+//     }
+
+//     if (child.isMesh && child.geometry.attributes.position.count === 0) {
+//       mesh.remove(child);
+//     }
+//   });
+// };
 
 export { Scene };

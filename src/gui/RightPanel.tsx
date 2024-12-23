@@ -164,7 +164,7 @@ export const RightPanel = (props: { item: Object | null }) => {
           <Typography>Опоры</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <ToggleButtons />
+          {props.item?.model && <ToggleButtons item={props.item.model} />}
         </AccordionDetails>
       </Accordion>
     </Grid>

@@ -16,7 +16,6 @@ abstract class Object implements IObject, Observer {
   children: Object[] = [];
   model: ObjectModel | null = null;
 
-  parentMesh: BasicMesh | null = null;
   mesh: BasicMesh | null = null;
 
   material: THREE.MeshStandardMaterial | null = null;
@@ -72,7 +71,9 @@ abstract class Object implements IObject, Observer {
 
       cloned_glb.scale.set(neededScale.x, neededScale.y, neededScale.z);
 
-      this.mesh = cloned_glb;
+      this.mesh = new THREE.Object3D();
+      cloned_glb.userData.isGLB = true;
+      this.mesh?.add(cloned_glb);
     } else {
       // we can do it as three object3d
       this.mesh = new THREE.Mesh(
@@ -101,6 +102,7 @@ abstract class Object implements IObject, Observer {
       )
     );
 
+    // debug only
     // if (this.model?.hightlight) {
     //   let box = Highlight.dashedBox({
     //     color: 0x00,
@@ -132,7 +134,7 @@ abstract class Object implements IObject, Observer {
   refresh() {
     this.updateByModel();
 
-    if (this.mesh) {
+    if (this.mesh && this.isMesh(this.mesh)) {
       const { mesh } = this;
 
       {
@@ -176,9 +178,48 @@ abstract class Object implements IObject, Observer {
           this.mesh.add(box);
         }
       }
+    } else if (this.mesh && this.glb) {
+      this.rescaleGLB();
+
+      const finalPos = new THREE.Vector3(
+        this.position.x - (this.model?.origin.x ?? 0),
+        this.position.y - (this.model?.origin.y ?? 0),
+        this.position.z - (this.model?.origin.z ?? 0)
+      );
+
+      this.mesh.position.set(finalPos.x, finalPos.y, finalPos.z);
+      this.mesh.setRotationFromQuaternion(
+        new THREE.Quaternion(
+          this.rotation.x,
+          this.rotation.y,
+          this.rotation.z,
+          this.rotation.w
+        )
+      );
     }
 
     this.children.forEach((child) => child.refresh());
+  }
+
+  rescaleGLB() {
+    if (!this.mesh) return;
+
+    const toScale = this.glb?.clone();
+
+    if (!toScale) return;
+
+    // it is glb for now
+    const neededScale = {
+      x: this.dimension.width / this.glbInitSize.x,
+      y: this.dimension.height / this.glbInitSize.y,
+      z: this.dimension.depth / this.glbInitSize.z,
+    };
+
+    this.mesh.children[0].scale.set(
+      neededScale.x,
+      neededScale.y,
+      neededScale.z
+    );
   }
 
   dispose() {
