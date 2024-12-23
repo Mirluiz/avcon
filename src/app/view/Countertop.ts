@@ -49,11 +49,11 @@ class Countertop extends Object implements IObject, Observer {
 
     const leftLeg = this.children.find(
       (child) => child.metadata.id === "leftLeg"
-    ) as BasicView | null;
+    ) as Leg | null;
 
     const rightLeg = this.children.find(
       (child) => child.metadata.id === "rightLeg"
-    ) as BasicView | null;
+    ) as Leg | null;
 
     return { panel, leftLeg, rightLeg };
   }

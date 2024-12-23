@@ -82,21 +82,21 @@ class Countertop extends Object {
     if (panel) panel.color = color;
   }
 
-  setLegSupport(variant: string) {
-    const { leftLeg, rightLeg } = this.getChildren();
+  // setLegSupport(variant: string) {
+  //   const { leftLeg, rightLeg } = this.getChildren();
 
-    if (leftLeg) {
-      const { backSupport, frontSupport } = leftLeg?.getChildren();
-      if (backSupport) backSupport.asset = { url: variant };
-      if (frontSupport) frontSupport.asset = { url: variant };
-    }
+  //   if (leftLeg) {
+  //     const { backSupport, frontSupport } = leftLeg?.getChildren();
+  //     if (backSupport) backSupport.asset = { url: variant };
+  //     if (frontSupport) frontSupport.asset = { url: variant };
+  //   }
 
-    if (rightLeg) {
-      const { backSupport, frontSupport } = rightLeg?.getChildren();
-      if (backSupport) backSupport.asset = { url: variant };
-      if (frontSupport) frontSupport.asset = { url: variant };
-    }
-  }
+  //   if (rightLeg) {
+  //     const { backSupport, frontSupport } = rightLeg?.getChildren();
+  //     if (backSupport) backSupport.asset = { url: variant };
+  //     if (frontSupport) frontSupport.asset = { url: variant };
+  //   }
+  // }
 
   static createNew() {
     const props: ObjectProps = {
